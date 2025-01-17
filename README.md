@@ -1,7 +1,5 @@
 # Boolean Expression to Flowchart Converter
 
-A Python script that converts boolean expressions to either Mermaid flowcharts or directed acyclic graphs (DAGs).
-
 ![hero diagram](static/hero.png)
 
 
@@ -67,4 +65,6 @@ python flowchart.py --questions '{"Q1": "Is it raining?", "Q2":"Am I wearing a r
 
 ## Technical Details
 
-The script can handle any non-merging DAG and most merging DAGs where the merges only affect the final outcome. It cannot represent cases where the path history influences decisions after a merge point, though this is rarely needed in practice. The Mermaid output uses color-coding (green for approval, red for rejection) and clean spacing to ensure readability, while the DAG output provides a structured JSON representation suitable for further processing or alternative visualizations.
+**Disjunctive Normal Form.** [Disjunctive Normal Form](https://en.wikipedia.org/wiki/Disjunctive_normal_form) (DNF) is a way of representing boolean logic that breaks complex logical expressions into simpler, more manageable parts. In DNF, a boolean expression is converted into a series of clauses connected by OR operations where each clause is a combination of terms connected by AND operations. It's often used for automated theorem proving. In this script, we use DNF conversion to break down complex decision rules into a set of paths through the decision tree. By converting the boolean expression to DNF, we can put together a set of paths that lead from the start node to one of the termination nodes. This transformation ensures that even intricate logical conditions can be represented as a straightforward graph.
+
+**Limitations.** The script can handle any non-merging DAG and most merging DAGs where the merges only affect the final outcome. It cannot represent cases where the path history influences decisions after a merge point, though this is rarely needed in practice.
