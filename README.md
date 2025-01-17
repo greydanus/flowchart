@@ -15,7 +15,7 @@ While this approach requires evaluating all questions (typically negligible with
 
 By default, running `python flowchart.py` outputs Mermaid flowchart syntax:
 
-```mermaid
+```
 %%{init: {'flowchart': {'rankSpacing': 25, 'nodeSpacing': 50, 'padding': 5}}}%%
 flowchart TD
 Start["Start"]
@@ -50,7 +50,38 @@ linkStyle default stroke:#333,stroke-width:2px
 
 You can visualize this by pasting it into [Mermaid Live](https://mermaid.live), which will render:
 
-![example flowchart](static/output.png)
+```mermaid
+%%{init: {'flowchart': {'rankSpacing': 25, 'nodeSpacing': 50, 'padding': 5}}}%%
+flowchart TD
+Start["Start"]
+Q5["Will crossing divide my supporters?"]
+Q2["Do my soldiers worship me completely?"]
+Q3["Is political reconciliation impossible?"]
+Q4["Can Pompey's pathetic legions stop my genius?"]
+Q1["Are those Senate weaklings plotting against me?"]
+Approve["Yes"]
+Deny["No"]
+Start --> Q2
+Start --> Q1
+Q2 -->|No| Deny
+Q3 -->|Yes| Approve
+Q4 -->|No| Approve
+Q3 -->|No| Deny
+Q1 -->|No| Deny
+Q1 -->|Yes| Q5
+Q4 -->|Yes| Deny
+Q5 -->|No| Q4
+Q5 -->|Yes| Deny
+Q2 -->|Yes| Q3
+classDef default fill:#f0f0f0,stroke:#333,stroke-width:1px,color:black
+classDef start fill:#FFA500,stroke:#333,color:white
+classDef approval fill:#4CAF50,stroke:#333,color:white
+classDef rejection fill:#DC143C,stroke:#333,color:white
+class Start start
+class Approve approval
+class Deny rejection
+linkStyle default stroke:#333,stroke-width:2px
+```
 
 Running `python flowchart.py --dag` outputs a JSON representation instead:
 
