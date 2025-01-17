@@ -89,7 +89,7 @@ Running `python flowchart.py --dag` outputs a JSON representation instead:
 {"nodes":{"Start":"Decision Point"},"edges":{"Start":{"Start":["Q2","Q1"]},"Q5":{"No":["Q4"],"Yes":["Deny"]},"Q2":{"Yes":["Q3"],"No":["Deny"]},"Q4":{"No":["Approve"],"Yes":["Deny"]},"Q3":{"No":["Deny"],"Yes":["Approve"]},"Q1":{"No":["Deny"],"Yes":["Q5"]}},"terminal_nodes":{"Approve":"Yes","Deny":"No"}}
 ```
 
-You can also input custom questions and boolean expressions:
+You can also input custom questions and boolean expressions. Here is an example for the question "Should I bring an umbrella":
 ```bash
 python flowchart.py --questions '{"Q1": "Is it raining?", "Q2":"Am I wearing a raincoat?", "Q3":"Am I walking to work?", "Q4":"Are there places to shelter?"}' --expr "(Q1 and Q3) or (not Q2 and not Q4)"
 ```
