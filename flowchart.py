@@ -132,9 +132,7 @@ class GraphBuilder:
             
         prev_node = None
         for i, lit in enumerate(term):
-            curr_count = self.node_count.get(lit.name, 0)
-            self.node_count[lit.name] = curr_count + 1
-            curr_node = f"{lit.name}_{curr_count}" if curr_count > 0 else lit.name
+            curr_node = lit.name
             self.nodes.add(curr_node)
             
             if prev_node:
