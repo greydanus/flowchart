@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import ast
 import json
 import argparse
@@ -154,32 +152,34 @@ class GraphBuilder:
             prev_node = curr_node
             is_prev_positive = lit.is_positive
 
-def build_graph(expr: str, questions: Dict[str, str], use_dag: bool = False) -> str:
-    node = ast.parse(expr, mode='eval').body
+def build_graph(data: Dict[str, str], use_dag: bool = False) -> str:
+    # Extract logic and questions from the input dictionary
+    logic = data.get('logic', '')
+    questions = {k: v for k, v in data.items() if k != 'logic'}
+    
+    node = ast.parse(logic, mode='eval').body
     terms = DNFConverter().convert(node)
     builder = GraphBuilder(questions)
     return json.dumps(builder.build_dag(terms), separators=(',', ':')) if use_dag else builder.build_mermaid(terms)
 
 def main():
-    default_questions = {
+    default_data = {
         "Q1": "Are those Senate weaklings plotting against me?",
         "Q2": "Do my soldiers worship me completely?", 
         "Q3": "Is political reconciliation impossible?",
         "Q4": "Can Pompey's pathetic legions stop my genius?",
-        "Q5": "Will crossing divide my supporters?"
+        "Q5": "Will crossing divide my supporters?",
+        "logic": "(Q1 and not (Q5 and Q4)) or (Q2 and Q3)"
     }
-    default_expr = "(Q1 and not (Q5 and Q4)) or (Q2 and Q3)"
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--questions', type=str, help='JSON string of question mapping')
-    parser.add_argument('--expr', type=str, help='Boolean expression')
+    parser.add_argument('--data', type=str, help='JSON string containing questions and logic')
     parser.add_argument('--dag', action='store_true', help='Output as DAG JSON')
     args = parser.parse_args()
     
-    questions = json.loads(args.questions) if args.questions else default_questions
-    expr = args.expr if args.expr else default_expr
+    data = json.loads(args.data) if args.data else default_data
     
-    print(build_graph(expr, questions, args.dag))
+    print(build_graph(data, args.dag))
 
 if __name__ == "__main__":
     main()

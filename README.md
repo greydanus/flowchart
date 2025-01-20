@@ -19,25 +19,25 @@ By default, running `python flowchart.py` outputs Mermaid flowchart syntax:
 %%{init: {'flowchart': {'rankSpacing': 25, 'nodeSpacing': 50, 'padding': 5}}}%%
 flowchart TD
 Start["Start"]
-Q5["Will crossing divide my supporters?"]
-Q2["Do my soldiers worship me completely?"]
-Q3["Is political reconciliation impossible?"]
-Q4["Can Pompey's pathetic legions stop my genius?"]
 Q1["Are those Senate weaklings plotting against me?"]
+Q2["Do my soldiers worship me completely?"]
+Q5["Will crossing divide my supporters?"]
+Q4["Can Pompey's pathetic legions stop my genius?"]
+Q3["Is political reconciliation impossible?"]
 Approve["Yes"]
 Deny["No"]
 Start --> Q2
 Start --> Q1
+Q2 -->|Yes| Q3
 Q2 -->|No| Deny
+Q5 -->|No| Q4
 Q3 -->|Yes| Approve
 Q4 -->|No| Approve
-Q3 -->|No| Deny
 Q1 -->|No| Deny
-Q1 -->|Yes| Q5
 Q4 -->|Yes| Deny
-Q5 -->|No| Q4
+Q3 -->|No| Deny
 Q5 -->|Yes| Deny
-Q2 -->|Yes| Q3
+Q1 -->|Yes| Q5
 classDef default fill:#f0f0f0,stroke:#333,stroke-width:1px,color:black
 classDef start fill:#FFA500,stroke:#333,color:white
 classDef approval fill:#4CAF50,stroke:#333,color:white
@@ -54,25 +54,25 @@ You can visualize this by pasting it into [Mermaid Live](https://mermaid.live), 
 %%{init: {'flowchart': {'rankSpacing': 25, 'nodeSpacing': 50, 'padding': 5}}}%%
 flowchart TD
 Start["Start"]
-Q5["Will crossing divide my supporters?"]
-Q2["Do my soldiers worship me completely?"]
-Q3["Is political reconciliation impossible?"]
-Q4["Can Pompey's pathetic legions stop my genius?"]
 Q1["Are those Senate weaklings plotting against me?"]
+Q2["Do my soldiers worship me completely?"]
+Q5["Will crossing divide my supporters?"]
+Q4["Can Pompey's pathetic legions stop my genius?"]
+Q3["Is political reconciliation impossible?"]
 Approve["Yes"]
 Deny["No"]
 Start --> Q2
 Start --> Q1
+Q2 -->|Yes| Q3
 Q2 -->|No| Deny
+Q5 -->|No| Q4
 Q3 -->|Yes| Approve
 Q4 -->|No| Approve
-Q3 -->|No| Deny
 Q1 -->|No| Deny
-Q1 -->|Yes| Q5
 Q4 -->|Yes| Deny
-Q5 -->|No| Q4
+Q3 -->|No| Deny
 Q5 -->|Yes| Deny
-Q2 -->|Yes| Q3
+Q1 -->|Yes| Q5
 classDef default fill:#f0f0f0,stroke:#333,stroke-width:1px,color:black
 classDef start fill:#FFA500,stroke:#333,color:white
 classDef approval fill:#4CAF50,stroke:#333,color:white
@@ -86,12 +86,12 @@ linkStyle default stroke:#333,stroke-width:2px
 Running `python flowchart.py --dag` outputs a JSON representation instead:
 
 ```json
-{"nodes":{"Start":"Decision Point"},"edges":{"Start":{"Start":["Q2","Q1"]},"Q5":{"No":["Q4"],"Yes":["Deny"]},"Q2":{"Yes":["Q3"],"No":["Deny"]},"Q4":{"No":["Approve"],"Yes":["Deny"]},"Q3":{"No":["Deny"],"Yes":["Approve"]},"Q1":{"No":["Deny"],"Yes":["Q5"]}},"terminal_nodes":{"Approve":"Yes","Deny":"No"}}
+{"nodes":{"Start":"Decision Point"},"edges":{"Start":{"Start":["Q1","Q2"]},"Q5":{"Yes":["Deny"],"No":["Q4"]},"Q4":{"No":["Approve"],"Yes":["Deny"]},"Q3":{"Yes":["Approve"],"No":["Deny"]},"Q1":{"No":["Deny"],"Yes":["Q5"]},"Q2":{"Yes":["Q3"],"No":["Deny"]}},"terminal_nodes":{"Approve":"Yes","Deny":"No"}}
 ```
 
 You can also input custom questions and boolean expressions. Here is an example for the question "Should I bring an umbrella":
 ```bash
-python flowchart.py --questions '{"Q1": "Is it raining?", "Q2":"Am I wearing a raincoat?", "Q3":"Am I walking to work?", "Q4":"Are there places to shelter?"}' --expr "(Q1 and Q3) or (not Q2 and not Q4)"
+python flowchart.py --data '{"Q1": "Is it raining?", "Q2": "Am I wearing a raincoat?", "Q3": "Am I walking to work?", "Q4": "Are there places to shelter?", "logic": "(Q1 and Q3) or (not Q2 and not Q4)"}'
 ```
 
 ## Technical Details
