@@ -194,15 +194,17 @@ class GraphBuilder:
         if not term:
             return
         prev_node = None
+        path_nodes = set()  # Track nodes in current path
+        
         for i, lit in enumerate(term):
             curr_node = lit.name
-            if curr_node in self.node_count:
-                existing_edges = {e[0] for e in self.edges if e[2] == curr_node} | {e[2] for e in self.edges if e[0] == curr_node}
-                if existing_edges:
-                    self.node_count[curr_node] += 1
-                    curr_node = f"{curr_node}_{self.node_count[curr_node]}"
+            if curr_node in path_nodes:  # Only duplicate if reused in same path
+                self.node_count[curr_node] += 1
+                curr_node = f"{curr_node}_{self.node_count[curr_node]}"
             else:
                 self.node_count[curr_node] = 0
+                path_nodes.add(curr_node)
+                
             self.nodes.add(curr_node)
             
             is_negated = curr_node in self.negated_nodes
@@ -211,11 +213,13 @@ class GraphBuilder:
                 no_target = "Deny" if (is_prev_positive != is_negated) else curr_node
                 self.edges.add((prev_node, "Yes", yes_target))
                 self.edges.add((prev_node, "No", no_target))
+                
             if i == len(term) - 1:
                 yes_target = "Approve" if (lit.is_positive != is_negated) else "Deny"
                 no_target = "Deny" if (lit.is_positive != is_negated) else "Approve"
                 self.edges.add((curr_node, "Yes", yes_target))
                 self.edges.add((curr_node, "No", no_target))
+                
             prev_node = curr_node
             is_prev_positive = lit.is_positive
 
