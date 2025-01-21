@@ -13,7 +13,20 @@ While this approach requires evaluating all questions (typically negligible with
 
 ## How to Use
 
-By default, running `python flowchart.py` outputs Mermaid flowchart syntax:
+Rnning `python flowchart.py` uses this default question list:
+
+```
+question_list = {
+    "Q1": "Are those Senate weaklings plotting against me?",
+    "Q2": "Do my soldiers worship me completely?", 
+    "Q3": "Is political reconciliation impossible?",
+    "Q4": "Can Pompey's pathetic legions stop my genius?",
+    "Q5": "Will crossing divide my supporters?",
+    "logic": "(Q1 and not (Q5 and Q4)) or (Q2 and Q3)"
+}
+```
+
+It will decompose the logic into Disjunctive Normal Form and then construct a flowchart in Mermaid syntax:
 
 ```
 %%{init: {'flowchart': {'rankSpacing': 25, 'nodeSpacing': 50, 'padding': 5}}}%%
@@ -89,7 +102,7 @@ Running `python flowchart.py --dag` outputs a JSON representation instead:
 {"nodes":{"Start":"Decision Point"},"edges":{"Start":{"Start":["Q1","Q2"]},"Q5":{"Yes":["Deny"],"No":["Q4"]},"Q4":{"No":["Approve"],"Yes":["Deny"]},"Q3":{"Yes":["Approve"],"No":["Deny"]},"Q1":{"No":["Deny"],"Yes":["Q5"]},"Q2":{"Yes":["Q3"],"No":["Deny"]}},"terminal_nodes":{"Approve":"Yes","Deny":"No"}}
 ```
 
-You can also input custom questions and boolean expressions. Here is an example for the question "Should I bring an umbrella":
+You can also input custom questions and boolean expressions. Here is an example for the question "Should I bring an umbrella?":
 ```bash
 python flowchart.py --data '{"Q1": "Is it raining?", "Q2": "Am I wearing a raincoat?", "Q3": "Am I walking to work?", "Q4": "Are there places to shelter?", "logic": "(Q1 and Q3) or (not Q2 and not Q4)"}'
 ```
